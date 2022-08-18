@@ -1,0 +1,67 @@
+[
+    {
+        "name": "首页",
+        "icon": "icon-zhuye",
+        "link": "home"
+    },
+    {
+        "name": "全部商品",
+        "icon": "icon-zhuye",
+        "link": "all"
+    },
+    {
+        "name": "图书办公",
+        "icon": "icon-shu",
+        "link": "book"
+    },
+    {
+        "name": "数码电器",
+        "icon": "icon-shouji",
+        "link": "electronic"
+    },
+    {
+        "name": "珠宝装饰",
+        "icon": "icon-xianglian-",
+        "link": "jewellery"
+    },
+    {
+        "name": "玩具乐器",
+        "icon": "icon-wanju",
+        "link": "toy"
+    },
+    {
+        "name": "票务娱乐",
+        "icon": "icon-dianyingpiao",
+        "link": "ticket"
+    },
+    {
+        "name": "居家日用",
+        "icon": "icon-riyongbaihuo",
+        "link": "life"
+    },
+    {
+        "name": "个护美妆",
+        "icon": "icon-huabanfuben",
+        "link": "makeup"
+    },
+    {
+        "name": "服饰鞋靴",
+        "icon": "icon-Txu",
+        "link": "cloth"
+    },
+    {
+        "name": "箱包",
+        "icon": "icon-zihangche",
+        "link": "bag"
+    },
+    {
+        "name": "食品饮料",
+        "icon": "icon-jinkoushipin",
+        "link": "food"
+    },
+    {
+        "name": "运动户外",
+        "icon": "icon-zihangche",
+        "link": "sports"
+    }
+]

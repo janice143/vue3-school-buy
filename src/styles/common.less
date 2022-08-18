@@ -1,0 +1,108 @@
+body,
+div,
+span,
+header,
+footer,
+nav,
+section,
+aside,
+article,
+ul,
+dl,
+dt,
+dd,
+li,
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i,
+b,
+textarea,
+button,
+input,
+select,
+figure,
+figcaption {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-style: normal;
+  text-decoration: none;
+  border: none;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, SimSun, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  &:focus {
+    outline: none;
+  }
+}
+html {
+  font-size: 16px;
+  h2 {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  html {
+    font-size: 12px;
+    h2 {
+      font-size: 16px;
+    }
+  }
+}
+
+/**
+ * 自定义滚轮杨思
+ */
+::-webkit-scrollbar {
+width: 15px;
+height:10px;
+}
+
+::-webkit-scrollbar-track {
+background: @white;
+border-left: 1px solid @cultured;
+}
+
+::-webkit-scrollbar-thumb {
+background: hsl(0, 0%, 80%);
+border: 3px solid @white;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: hsl(0, 0%, 70%);
+}
+
+input[type="button"],
+input[type="submit"],
+input[type="search"],
+input[type="reset"] {
+  -webkit-appearance: none;
+}
+
+textarea {
+  -webkit-appearance: none;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  // background-color: #F5F5F5;
+}
+button:hover {
+  cursor: pointer;
+}
+.iconfont{
+  width:1.2rem;
+  height:1.2rem;
+  vertical-align: -0.2rem;
+}
