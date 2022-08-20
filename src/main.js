@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 //引入全局样式
 import "./styles/common.less"
-import "./styles/iconfont.js"
+// import "./styles/iconfont.js"
 
 import store from './store'
 

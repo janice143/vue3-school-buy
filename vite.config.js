@@ -16,7 +16,7 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()],
     }),
-    viteCompression()
+    viteCompression() 
   ],
   css: {
     // css预处理器

@@ -3,8 +3,9 @@
     <div class="container">
       <div class="slider-container has-scrollbar">
         <div class="slider-item">
+          <!-- "https://cdn.jsdelivr.net/gh/janice143/pic_sweet_bed@main/vue3_school_buy/banner-1.webp" -->
           <img
-            src="@/assets/images/banner-1.png"
+            src="@/assets/images/banner-1.webp"
             alt="women's latest fashion sale"
             class="banner-img"
           />
@@ -22,13 +23,13 @@
 
         <div class="slider-item">
           <img
-            src="@/assets/images/banner-2.png"
+            src="@/assets/images/banner-2.webp"
             alt="modern sunglasses"
             class="banner-img"
           />
 
           <div class="banner-content">
-             <p class="banner-subtitle">热卖商品</p>
+            <p class="banner-subtitle">热卖商品</p>
 
             <h2 class="banner-title">女士时尚羊毛衣</h2>
 
@@ -40,13 +41,31 @@
 
         <div class="slider-item">
           <img
-            src="@/assets/images/banner-3.png"
+            src="@/assets/images/banner-3.webp"
             alt="new fashion summer sale"
             class="banner-img"
           />
 
           <div class="banner-content">
-             <p class="banner-subtitle">热卖商品</p>
+            <p class="banner-subtitle">热卖商品</p>
+
+            <h2 class="banner-title">女士时尚羊毛衣</h2>
+
+            <p class="banner-text">只要 ￥ <b>20</b>.00</p>
+
+            <a href="#" class="banner-btn">现在购买</a>
+          </div>
+        </div>
+
+        <div class="slider-item">
+          <img
+            src="@/assets/images/banner-4.webp"
+            alt="new fashion summer sale"
+            class="banner-img"
+          />
+
+          <div class="banner-content">
+            <p class="banner-subtitle">热卖商品</p>
 
             <h2 class="banner-title">女士时尚羊毛衣</h2>
 
@@ -121,8 +140,8 @@ watchEffect(() => {});
         left: 10%;
         padding: 20px 25px;
         border-radius: @border-radius-md;
-        & > *{
-            margin-bottom: 2rem;
+        & > * {
+          margin-bottom: 2rem;
         }
         .banner-subtitle {
           color: @salmon-pink;
@@ -143,12 +162,11 @@ watchEffect(() => {});
           color: @sonic-silver;
           font-size: calc(2 * @fs-7);
           font-weight: @weight-500;
-          
-        //   border: 1px solid red;
+
+          //   border: 1px solid red;
         }
 
         .banner-btn {
-          
           background: @salmon-pink;
           color: @white;
           font-size: calc(2 * @fs-11);
@@ -173,9 +191,9 @@ watchEffect(() => {});
           left: 25px;
           right: 25px;
           padding: 20px 25px;
-          & > *{
+          & > * {
             margin-bottom: 1rem;
-        }
+          }
         }
         //   height: 100%;
         .banner-text {
