@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import sideNav from "@/assets/list.json";
 import {
   ref,
@@ -65,9 +65,7 @@ const { $bus } = currentInstance.appContext.config.globalProperties;
 const state = reactive({
   curIndex: route.query.category1Id || -1,
 });
-// const getProductList = () => {
-//   store.dispatch("getProductList", state.conditions);
-// };
+
 watchEffect(() => state.curIndex = Number(route.query.category1Id))
 // 获取父组件的值
 const props = defineProps({
