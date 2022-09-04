@@ -1,10 +1,5 @@
 [
     {
-        "name": "首页",
-        "icon": "icon-zhuye",
-        "link": "home"
-    },
-    {
         "name": "全部商品",
         "icon": "icon-zhuye",
         "link": "all"

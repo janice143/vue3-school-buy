@@ -16,7 +16,7 @@
         :pageNo="state.conditions.pageNo"
         :pageSize="state.conditions.pageSize"
         :total="totalCount"
-        :continues=5
+        :continues="5"
         @getPageNo="getPageNo"
       ></Pagination>
     </div>
@@ -41,7 +41,7 @@ import {
   getCurrentInstance,
   onBeforeUnmount,
   watch,
-  provide
+  provide,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -89,6 +89,13 @@ const totalCount = computed(() => {
 });
 
 const getProductList = () => {
+  state.conditions.categoryName =
+    route.query.categoryName === undefined
+      ? "全部商品"
+      : route.query.categoryName;
+  state.conditions.category1Id =
+    route.query.category1Id === undefined ? 0 : route.query.category1Id;
+  state.conditions.keyword = route.params.keyword;
   store.dispatch("getProductList", state.conditions);
 };
 
@@ -119,13 +126,13 @@ const getNewOrder = (newOrder) => {
   getProductList();
 };
 
-const PARENT_PROVIDE = 'parentProvide'
+const PARENT_PROVIDE = "parentProvide";
 // 提供父组件指定方法
 
 provide(`${PARENT_PROVIDE}/getProductList`, getProductList);
 
 watchEffect(() => {});
-watch(route,(pre,old) => {
+watch(route, (pre, old) => {
   // 输入框等改变路由，监听路由的信息是否发生变化
 
   state.conditions.categoryName =
@@ -139,7 +146,7 @@ watch(route,(pre,old) => {
   // //再次发起ajax请求
   getProductList();
   state.conditions.category1Id = undefined;
-  route.params.keyword = undefined
+  route.params.keyword = undefined;
 });
 </script>
 <style scoped lang="less">

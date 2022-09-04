@@ -1,6 +1,4 @@
 <template>
-  <!-- type-row 横向排列，type-col纵向排列 -->
-
   <!-- 未登录 -->
   <ul v-if="!username">
     <li v-for="(item, index) in state.mylist" :key="index">

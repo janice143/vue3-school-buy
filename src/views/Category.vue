@@ -1,8 +1,7 @@
 <template>
   <div>
     <ul class="category-list">
-      
-      <li
+      <!-- <li
         v-for="(cat, index) in sideNav"
         :key="index"
         @click="changeIdx(index, $event)"
@@ -13,6 +12,22 @@
       <span class="menu-title">{{ cat.name }}</span>
       </a>
 
+      </li> -->
+
+      <li class="menu-category">
+        <router-link to="/home" active-class="curStyle"
+        @click.native="state.curIndex = -1"
+          ><span class="menu-title">首页</span></router-link
+        >
+      </li>
+      <li v-for="(cat, index) in sideNav" :key="index" class="menu-category">
+        <router-link
+          :to="`/search?categoryName=${cat.name}&category1Id=${index}`"
+          :class="{ curStyle: state.curIndex === index }"
+          @click.native="state.curIndex = index"
+        >
+          <span class="menu-title">{{ cat.name }}</span>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -30,7 +45,7 @@ import {
   computed,
   defineEmits,
   defineProps,
-  getCurrentInstance
+  getCurrentInstance,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -48,8 +63,12 @@ const { $bus } = currentInstance.appContext.config.globalProperties;
  */
 
 const state = reactive({
-  curIndex: route.query.category1Id  || 0
+  curIndex: route.query.category1Id || -1,
 });
+// const getProductList = () => {
+//   store.dispatch("getProductList", state.conditions);
+// };
+watchEffect(() => state.curIndex = Number(route.query.category1Id))
 // 获取父组件的值
 const props = defineProps({
   type: {
@@ -57,43 +76,10 @@ const props = defineProps({
     default: "col",
   },
 });
-
-
-const changeIdx = (index, e) => {
-  state.curIndex = index;
-
-  // 把分类名字传给父组件，父组件中发请求
-  const categoryName = sideNav[index].name;
-
-  // 如果 类名是全部商品，并且没有关键字，那么路径重定向为Home
-  if (categoryName === "首页") {
-    router.push("/home");
-  } else {
-    // 如果类名是其他，那么传对应参数给路由
-    //准备路由跳转的参数对象
-    let location = { name: "search" };
-    let query = { categoryName: categoryName };
-    //一定是a标签：一级目录
-    query.category1Id = index;
-
-    // 由于在搜索框中输入字符搜索时，该参数是在params上，所以要顺带带上params参数
-    if (route.params) {
-      location.params = route.params;
-      //动态给location配置对象添加query属性
-      location.query = query;
-      //路由跳转
-      router.push(location);
-      // console.log(location)
-    }
-  }
-  e.preventDefault();
-};
-onMounted(()=>{
+onMounted(() => {
   // console.log(router.currentRoute.value.fullPath)
-})
-defineExpose({
-
 });
+defineExpose({});
 </script>
 <style scoped lang="less">
 .category-list {
@@ -107,18 +93,18 @@ defineExpose({
   white-space: nowrap;
   gap: 30px;
   height: 6em;
-  li.curStyle {
-    background-color: @salmon-pink;
-    padding: 0.8em 1.3em;
-    border-radius: @border-radius-md;
-    span {
-      color: white;
-      &:hover {
+  li {
+    .curStyle {
+      background-color: @salmon-pink;
+      padding: 0.8em 1.3em;
+      border-radius: @border-radius-md;
+      span {
         color: white;
+        &:hover {
+          color: white;
+        }
       }
     }
-
-    // font-weight: 900;
   }
 
   .menu-category:not(:nth-child(2)) {
