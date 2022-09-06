@@ -1,4 +1,4 @@
-// declare module "bus" {
-//   import mitt from "mitt";
-//   export default mitt;
-// }
+declare module "mitt" {
+  import mitt from "mitt";
+  export default mitt;
+}

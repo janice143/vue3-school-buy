@@ -30,6 +30,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      "types": path.resolve(__dirname, "./types"),
     },
   },
   // 配置代理跨域

@@ -17,7 +17,7 @@
 
     <button
       v-for="continueNumber in getContinuesArray"
-      :key="continueNumber.continueNumberId"
+      :key="continueNumber"
       @click="$emit('getPageNo', continueNumber)"
       :class="{ active: pageNo === continueNumber }"
     >
@@ -25,10 +25,10 @@
     </button>
 
     <!-- 15 14  不显示 -->
-    <button v-if="getContinuesArray.slice(-1) < pageNumber - 1">...</button>
+    <button v-if="getContinuesArray[getContinuesArray.length-1] < pageNumber - 1">...</button>
     <!-- 15  不显示 -->
     <button
-      v-if="getContinuesArray.slice(-1) < pageNumber"
+      v-if="getContinuesArray[getContinuesArray.length-1] < pageNumber"
       @click="$emit('getPageNo', pageNumber)"
       :class="{ active: pageNo === pageNumber }"
     >
@@ -45,35 +45,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
   computed,
   defineProps,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 路由对象
-const route = useRoute();
-const router = useRouter();
-// 数据部分
-const state = reactive({});
-const props = defineProps({
-  pageNo: Number,
-  pageSize: Number,
-  total: Number,
-  continues: Number,
-});
+// 注意这里类型声明了用number,而不是大写的Number
+
+const props = defineProps<{
+  pageNo: number,
+  pageSize: number,
+  total: number,
+  continues: number,
+}>()
 
 const pageNumber = computed(() => {
   return Math.ceil(props.total / props.pageSize);
 });
 // 获取连续页面的数组，当前页总在中间，比如说当前页是第8页，那么连续页的数字串是6 7 8 9 10，起始页是6，尾页是10
-const getContinuesArray = computed(() => {
+const getContinuesArray = computed(():number[] => {
   // 如果当前总页数小于等于continues
   // console.log(pageNumber.value,props.continues)
   if (pageNumber.value <= props.continues) {
@@ -97,14 +87,6 @@ const getContinuesArray = computed(() => {
   }
 });
 
-onBeforeMount(() => {});
-onMounted(() => {});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-
-})
 </script>
 <style lang="less" scoped>
 .pagination {

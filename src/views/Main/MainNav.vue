@@ -55,7 +55,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -64,7 +64,6 @@ import {
   onMounted,
   watchEffect,
   computed,
-  defineEmits,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -78,7 +77,7 @@ const state = reactive({
   isFadeout: true,
 });
 //   改变菜单栏的排序方式
-const changeOrder = (order) => {
+const changeOrder = (order:string) => {
   // order 1表示新品 2表示热门 3表示价格
   const newOrder = `${order}:${
     state.order.split(":")[1] === "desc" ? "asc" : "desc"
@@ -90,7 +89,7 @@ const changeOrder = (order) => {
 };
 // 子组件触发自定义事件，传值给父组件
 const emit = defineEmits(["getNewOrder"]);
-let t = null
+let t:number | undefined = undefined
 
 const handleClick = ()=>{
   state.isOpen = !state.isOpen
@@ -109,9 +108,9 @@ const goToTop = ()=>{
   // console.log('got to top')
   // window.scrollTo(0,0)
 
-   const cubic = (value) => Math.pow(value, 3)
+   const cubic = (value:number) => Math.pow(value, 3)
 
-  const easeInOutCubic = (value) => value < 0.5 ?
+  const easeInOutCubic = (value:number) => value < 0.5 ?
     cubic(value * 2) / 2 :
     1 - cubic((1 - value) * 2) / 2
     
@@ -133,15 +132,6 @@ const goToTop = ()=>{
     }
     rAF(frameFunc)
 }
-
-onBeforeMount(() => {});
-onMounted(() => {});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-//defineExpose({
-// ...toRefs(state)
-//})
 </script>
 <style scoped lang="less">
 .nav-content {

@@ -23,6 +23,17 @@ https://www.jianshu.com/p/b2e5a6611183
 Cannot find module './App.vue' or its corresponding type declarations.
 https://juejin.cn/post/6904831097533071368
 
+getCurrentInstance()必须得在setup里面用，参考https://juejin.cn/post/6918365587248775175
+vue3.0通讯 - hook优雅的封装mitt.js
+https://blog.csdn.net/u012901970/article/details/126027006
+
+编程式导航，自定义locations，写到router.push()中，出现 自定义locations的类型不能赋值给 RouteLocationRaw类型
+https://segmentfault.com/a/1190000039373891
+
+props 类型声明
+https://blog.51cto.com/u_15077552/4172068
+
+
 
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.

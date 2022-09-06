@@ -32,7 +32,11 @@
     </form>
 
     <div class="header-right">
-      <svg class="iconfont icon-sousuo" aria-hidden="true" @click="state.showForm = !state.showForm">
+      <svg
+        class="iconfont icon-sousuo"
+        aria-hidden="true"
+        @click="state.showForm = !state.showForm"
+      >
         <use xlink:href="#icon-sousuo"></use>
       </svg>
       <!-- <div
@@ -66,7 +70,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -77,52 +81,50 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, RouteLocationOptions } from "vue-router";
 import HeaderNav from "./HeaderNav.vue";
+import { useEventbus } from "@/hooks/useEventBus";
+import { IHeaderData, Ilocation } from "types/header";
+
 const route = useRoute();
 const router = useRouter();
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus } = currentInstance.appContext.config.globalProperties;
+const eventbus = useEventbus();
 
-/**
- * 数据部分
- */
-const state = reactive({
+
+const state:IHeaderData = reactive({
   keyword: "",
   showForm: false,
 });
+
 const goHome = () => {
-  $bus.emit("changeBHT"); // change backhome false
-  $bus.emit("changeIdx0");
+  eventbus.customEmit("changeBHT"); // change backhome false
+  eventbus.customEmit("changeIdx0");
   router.push("/home");
 };
 const showCompoMenu = () => {
-  $bus.emit("showMenu");
-  // console.log("打开菜单",$bus);
+  eventbus.customEmit("showMenu");
 };
 
 const goSearch = () => {
   state.showForm = false;
   if (route.query) {
-    let location = {
+    let location: Ilocation = {
       name: "search",
       params: { keyword: state.keyword || undefined },
+      query: {category1Id: '', categoryName: ''}
     };
     location.query = route.query;
-    router.push(location);
+    router.push(location as RouteLocationOptions) ;
     // 全局事件总线传值给home
-    $bus.emit("enterKeyword", state.keyword);
-    $bus.emit("changeIdx");
+    eventbus.customEmit("enterKeyword", state.keyword);
+    eventbus.customEmit("changeIdx");
     state.keyword = "";
   }
 };
 
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+onBeforeMount(() => {});
 onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
+  // console.log(HeaderData);
 });
 
 watchEffect(() => {});

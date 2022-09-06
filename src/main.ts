@@ -14,8 +14,8 @@ const app = createApp(App) // 创建实例
 import * as API from './api/index';
 app.config.globalProperties.$API = API
 // 全局bus
-import bus from '@/utils/bus'
-app.config.globalProperties.$bus = bus
+// import bus from '@/utils/bus'
+// app.config.globalProperties.$bus = bus
 
 // 引入消息弹框组件
 import Message from '@/components/Message/message.js';
