@@ -33,6 +33,11 @@ https://segmentfault.com/a/1190000039373891
 props 类型声明
 https://blog.51cto.com/u_15077552/4172068
 
+Element implicitly has an 'any' type because expression of type 'string' can't be used to index
+在写message的组件使，template上的动态样式报了上面的错误，
+https://stackoverflow.com/questions/57086672/element-implicitly-has-an-any-type-because-expression-of-type-string-cant-b
+原：:style="state.style[props.type]"
+改：:style="state.style[props.type as keyof Istyle]"
 
 
 

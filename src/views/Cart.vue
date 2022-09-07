@@ -14,11 +14,11 @@
     </ul>
     <Blank v-else></Blank>
     <div class="total">共计：￥ {{ totalPrice }}</div>
-    <a href="#" class="btn">结算</a>
+    <button @click="trade" class="btn">结算</button>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Blank from './Main/Blank.vue'
 import {
   ref,
@@ -28,9 +28,16 @@ import {
   onMounted,
   watchEffect,
   computed,
+  getCurrentInstance
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import store from "../store";
+import { Iproductlist } from 'types/prodgrid';
+
+const currentInstance = getCurrentInstance();
+const $message = currentInstance?.appContext.config.globalProperties.$message
+
+
 // 路由对象
 const route = useRoute();
 const router = useRouter();
@@ -41,17 +48,17 @@ const getData = () => {
   // 派发action:通知vuex发get请求，
   store.dispatch("getCartList");
 };
-const deleteCart = (id) => {
+const deleteCart = (id:string) => {
   store.dispatch("deleteCartById", id).then(() => {
     getData();
   });
 };
 const trade = () => {
-  console.log("点击支付");
-  // this.$message.show({
-  //   text: "校园闲置暂时仅支持线下交易！",
-  //   type: "warn",
-  // });
+  // console.log("点击支付");
+  $message.show({
+    text: "校园闲置暂时仅支持线下交易！",
+    type: "warn",
+  });
 };
 const cartList = computed(() => {
   return store.state.cart.cartList;
@@ -61,21 +68,16 @@ const totalPrice = computed(() => {
   let sum = 0;
   // console.log(cartList.value)
   if (cartList.value) {
-    cartList.value.forEach((item) => {
+    cartList.value.forEach((item:Iproductlist) => {    
       sum += item.price;
     });
   }
-
-  return parseFloat(sum).toFixed(2);
+  return sum.toFixed(2);
 });
 onBeforeMount(() => {});
 onMounted(() => {
   getData();
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({});
 </script>
 <style scoped lang="less">
 .shopping-cart {

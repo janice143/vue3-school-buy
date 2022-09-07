@@ -57,19 +57,10 @@
 
 <script setup lang="ts">
 import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
+  reactive
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-// 路由对象
-const route = useRoute();
-const router = useRouter();
 // 数据部分
 const state = reactive({
   order: "1:desc",
@@ -95,12 +86,12 @@ const handleClick = ()=>{
   state.isOpen = !state.isOpen
   state.isFadeout = false
   // console.log(t)
-  if(t) clearTimeout(t)
+  if(t) window.clearTimeout(t)
 
-   t = setTimeout(()=>{
+   t = window.setTimeout(()=>{
     state.isFadeout = true
     state.isOpen = false
-    clearTimeout(t)
+    window.clearTimeout(t)
   },3000)
 }
 

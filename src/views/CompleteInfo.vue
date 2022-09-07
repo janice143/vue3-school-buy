@@ -59,7 +59,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button class="btn-primary" @click="submitForm"
+              <el-button class="btn-primary" @click="submitForm(registerForm)"
                 >提交</el-button
               >
               <el-button @click="resetForm">重置</el-button>
@@ -74,28 +74,30 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
-  toRefs,
   onBeforeMount,
   onMounted,
   watchEffect,
-  computed,
   getCurrentInstance,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import type { FormInstance } from 'element-plus'
+
 // 路由对象
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
 const currentInstance = getCurrentInstance();
-const { $message } = currentInstance.appContext.config.globalProperties;
+const $message = currentInstance?.appContext.config.globalProperties.$message
 
-const registerForm = ref(null);
-const validatePhone = (rule, value, callback) => {
+// const registerForm = ref(null);
+const registerForm = ref<FormInstance>()
+
+const validatePhone = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback(new Error("必须填入手机号"));
   } else {
@@ -107,14 +109,14 @@ const validatePhone = (rule, value, callback) => {
     }, 1000);
   }
 };
-const validateStudentnumber = (rule, value, callback) => {
+const validateStudentnumber = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback(new Error("必须填学号"));
   } else {
     callback();
   }
 };
-const validatePlace = (rule, value, callback) => {
+const validatePlace = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback(new Error("必须填寝室"));
   } else {
@@ -147,8 +149,9 @@ const state = reactive({
 });
 
 //  用户注册
-const submitForm = () => {
-  registerForm.value.validate((valid) => {
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
     if (valid) {
       userComplete()
         .then((res) => {
@@ -192,16 +195,29 @@ const userComplete = () => {
 
 onBeforeMount(() => {});
 onMounted(() => {
-    getData()
+  getData();
 });
 watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
 defineExpose({
   registerForm,
 });
 </script>
 <style scoped lang="less">
+.login {
+  width: 100vw;
+  height: 100vh;
+  background: #283c86; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .container {
   max-width: 660px;
   padding: 0 20px;
@@ -247,7 +263,7 @@ defineExpose({
   font-size: 14px;
 }
 .wrapper .signup-link a {
-  color: #9828d0;
+  color: @salmon-pink;
   text-decoration: none;
 }
 .form .signup-link a:hover {

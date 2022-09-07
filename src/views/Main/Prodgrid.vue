@@ -73,44 +73,37 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
-  ref,
   reactive,
-  toRefs,
   onBeforeMount,
   onMounted,
   watchEffect,
-  computed,
-  watch,
   inject,
   getCurrentInstance,
+  computed
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { Iinfo, Iproductlist, Iuserlist, IwantId } from 'types/prodgrid'
 const currentInstance = getCurrentInstance();
-const { $message } = currentInstance.appContext.config.globalProperties;
+const $message = currentInstance?.appContext.config.globalProperties.$message
 
 const store = useStore();
-// 路由对象
-const route = useRoute();
-const router = useRouter();
+
 // 数据部分
 const state = reactive({
   hasProdChanged: false,
 });
-
-const props = defineProps({
-  productlist: Array,
-  userlist: Array,
-  wantId: Array,
-});
-
+const props = defineProps<{
+  productlist: Iproductlist[],
+  userlist: Iuserlist[],
+  wantId: IwantId,
+}>()
 // 注入父组件指定方法
 const PARENT_PROVIDE = "parentProvide";
-const getProductList = inject(`${PARENT_PROVIDE}/getProductList`);
+const getProductList = inject(`${PARENT_PROVIDE}/getProductList`) as ()=>{};
 // 添加收藏
-const addShoucang = (info) => {
+const addShoucang = (info:Iinfo) => {
   // console.log('点击收藏')
   const isWanted = props.wantId.includes(info.id) ? true : false;
   // 未收藏的时候，发送收藏请求
@@ -139,7 +132,7 @@ const addShoucang = (info) => {
 };
 
 // 添加购物车
-const addCart = (id) => {
+const addCart = (id:string) => {
   // console.log("点击加入购物车");
 
   const token = store.state.user.token;
@@ -153,7 +146,7 @@ const addCart = (id) => {
         $message.show({ text: "成功加入购物车", type: "success" });
       })
       .catch((err) => {
-        $message.show({ text: error.message, type: "error" });
+        $message.show({ text: err.message, type: "error" });
       });
   } else {
     // 如果没登录
@@ -163,9 +156,14 @@ const addCart = (id) => {
     });
   }
 };
-
+const userName = computed(()=>{
+      return store.state.user.userInfo.username;
+})
 onBeforeMount(() => {});
-onMounted(() => {});
+onMounted(() => {
+  console.log();
+  
+});
 watchEffect(() => {});
 </script>
 <style scoped lang="less">

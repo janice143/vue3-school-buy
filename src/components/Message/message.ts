@@ -1,11 +1,16 @@
 import Message from "./index.vue";
-import { createVNode, render } from "vue";
+import { App, createVNode, render } from "vue";
+
+interface Iprops{
+  text: string,
+  type: string
+}
 export default {
   // 向外暴露install方法
-  install(app) {
-    let message = null;
+  install(app: App<Element>) {
+    let message:null = null;
 
-    function show(props) {
+    function show(props:Iprops) {
       // 添加方法，后面挂载到$message上
       if (!message) {
         const div = document.createElement("div");

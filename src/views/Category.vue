@@ -1,20 +1,7 @@
 <template>
   <div>
     <ul class="category-list">
-      <!-- <li
-        v-for="(cat, index) in sideNav"
-        :key="index"
-        @click="changeIdx(index, $event)"
-        :class="{ curStyle: state.curIndex === index }"
-        class="menu-category"
-      >
-      <a href="javscript:void(0)" :data-id="index" >
-      <span class="menu-title">{{ cat.name }}</span>
-      </a>
-
-      </li> -->
-
-      <li class="menu-category">
+       <li class="menu-category">
         <router-link to="/home" active-class="curStyle"
         @click.native="state.curIndex = -1"
           ><span class="menu-title">首页</span></router-link
@@ -36,48 +23,24 @@
 <script setup lang="ts">
 import sideNav from "@/assets/list.json";
 import {
-  ref,
   reactive,
-  toRefs,
-  onBeforeMount,
   onMounted,
   watchEffect,
-  computed,
-  defineEmits,
   defineProps,
   getCurrentInstance,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-/**
- * 路由对象
- */
 const route = useRoute();
 const router = useRouter();
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus } = currentInstance.appContext.config.globalProperties;
 
-/**
- * 数据部分
- */
 
 const state = reactive({
   curIndex: route.query.category1Id || -1,
 });
 
 watchEffect(() => state.curIndex = Number(route.query.category1Id))
-// 获取父组件的值
-const props = defineProps({
-  type: {
-    type: String,
-    default: "col",
-  },
-});
-onMounted(() => {
-  // console.log(router.currentRoute.value.fullPath)
-});
-defineExpose({});
+
 </script>
 <style scoped lang="less">
 .category-list {

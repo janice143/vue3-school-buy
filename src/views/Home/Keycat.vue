@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reqgetKeycat } from "@/api/index.js";
 import {
   ref,
@@ -35,9 +35,10 @@ import {
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus } = currentInstance.appContext.config.globalProperties;
+import {IkeycatList} from 'types/keycat.ts'
+import { useEventbus } from "@/hooks/useEventBus";
+const eventbus = useEventbus();
+
 
 const store = useStore();
 // 路由对象
@@ -73,8 +74,8 @@ const goProductList = (type) => {
     location.query = route.query;
     router.push(location);
   }
-  $bus.emit("getKeycat"); // 改变backhome状态
-  $bus.emit("changeIdx"); // 主页跳转，改变Index为1
+  eventbus.customEmit("getKeycat"); // 改变backhome状态
+  eventbus.customEmit("changeIdx"); // 主页跳转，改变Index为1
 };
 
 onBeforeMount(() => {});
@@ -86,12 +87,7 @@ onMounted(() => {
     })
     .catch((err) => console.log(err));
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-//defineExpose({
-// ...toRefs(state)
-//})
+
 </script>
 <style scoped lang="less">
 .category {

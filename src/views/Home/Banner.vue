@@ -79,30 +79,8 @@
   </div>
 </template>
 
-<script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 路由对象
-const route = useRoute();
-const router = useRouter();
-// 数据部分
-const state = reactive({});
-onBeforeMount(() => {});
-onMounted(() => {});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-//defineExpose({
-// ...toRefs(state)
-//})
+<script setup lang="ts">
+
 </script>
 <style scoped lang="less">
 .banner {

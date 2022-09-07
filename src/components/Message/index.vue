@@ -1,11 +1,11 @@
 <template>
   <div>
     <Transition name="down">
-      <div class="my-message" :style="state.style[props.type]" v-show="state.isShow">
+      <div class="my-message" :style="state.style[props.type as keyof Istyle]" v-show="state.isShow">
         <!-- 上面绑定的是样式 -->
         <!-- 不同提示图标会变 -->
         <svg class="iconfont" aria-hidden="true" >
-            <use :xlink:href="`#${state.style[props.type].icon}`"></use>
+            <use :xlink:href="`#${state.style[props.type as keyof Istyle].icon}`"></use>
           </svg>
         <span class="text">{{ props.text }}</span>
       </div>
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -23,12 +23,9 @@ import {
   watchEffect,
   computed,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 路由对象
-const route = useRoute();
-const router = useRouter();
+import { Istyle } from "types/message"
 // 数据部分
-const style = {
+const style:Istyle = {
   warn: {
     icon: "icon-jinggao",
     color: "#E6A23C",
@@ -64,26 +61,19 @@ const props = defineProps({
     default: "warn",
   },
 });
-const close = (timer)=> {
+const close = (timer:number | undefined)=> {
       state.isShow = false;
       clearTimeout(timer);
-      timer = null;
+      timer = undefined;
 }
-onBeforeMount(() => {});
 onMounted(() => {
     state.isShow = true;
-    let timer = setTimeout(() => {
+    let timer:number = setTimeout(() => {
       if (state.isShow) {
         close(timer);
       }
     }, state.duration);
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-//defineExpose({
-// ...toRefs(state)
-//})
 </script>
 <style scoped lang="less">
 .down {

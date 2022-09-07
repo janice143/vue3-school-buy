@@ -74,10 +74,10 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button class="btn-primary" @click="submitForm"
+              <el-button class="btn-primary" @click="submitForm(registerForm)"
                 >提交</el-button
               >
-              <el-button @click="resetForm">重置</el-button>
+              <el-button @click="resetForm(registerForm)">重置</el-button>
             </el-form-item>
           </el-form>
 
@@ -89,25 +89,24 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
-  toRefs,
   onBeforeMount,
   onMounted,
   watchEffect,
-  computed,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import type { FormInstance } from 'element-plus'
+
 // 路由对象
-const route = useRoute();
 const router = useRouter();
 const store = useStore();
 
-const registerForm = ref(null)
-const validateUsername = (rule, value, callback) => {
+const registerForm = ref<FormInstance>()
+const validateUsername = (rule:any, value:string, callback:any) => {
   if (!value) {
     return callback(new Error("用户名不能为空"));
   }
@@ -124,7 +123,7 @@ const validateUsername = (rule, value, callback) => {
     }
   }, 1000);
 };
-const validatePass = (rule, value, callback) => {
+const validatePass = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback(new Error("请输入密码"));
   } else {
@@ -132,12 +131,13 @@ const validatePass = (rule, value, callback) => {
       callback(new Error("密码至少 6位"));
     }
     if (state.registerForm.password1 !== "") {
-      registerForm.value.validateField("password1");
+      if (!registerForm.value) return
+      registerForm.value.validateField("password1",() => null);
     }
     callback();
   }
 };
-const validatePass2 = (rule, value, callback) => {
+const validatePass2 = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback(new Error("请再次输入密码"));
   } else if (value !== state.registerForm.password) {
@@ -146,7 +146,7 @@ const validatePass2 = (rule, value, callback) => {
     callback();
   }
 };
-const validatePhone = (rule, value, callback) => {
+const validatePhone = (rule:any, value:string, callback:any) => {
   if (value === "") {
     callback();
   } else {
@@ -187,8 +187,9 @@ const state = reactive({
 });
 
 //  用户注册
-const submitForm = () => {
-  registerForm.value.validate((valid) => {
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
     if (valid) {
       // alert('submit!');
       // 发请求
@@ -209,37 +210,47 @@ const submitForm = () => {
     }
   });
 };
-const resetForm = () => {
-  registerForm.value.resetFields();
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields();
 };
 const userRegister = () => {
   const { username, phone, studentnumber, place, password, password1 } =
     state.registerForm;
-    return store.dispatch("userRegsiterByInfo", {
-        username,
-        phone,
-        studentnumber,
-        place,
-        password,
-      });
+  return store.dispatch("userRegsiterByInfo", {
+    username,
+    phone,
+    studentnumber,
+    place,
+    password,
+  });
 };
 
-onBeforeMount(() => {
-
-});
-onMounted(() => {});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
 defineExpose({
   registerForm,
 });
 </script>
 <style scoped lang="less">
+.login {
+  width: 100vw;
+  height: 100vh;
+  background: #283c86; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .container {
   max-width: 660px;
   padding: 0 20px;
-  margin: 170px auto;
+  margin: 5% auto;
+
   .wrapper {
     width: 100%;
     background: #fff;
@@ -250,7 +261,7 @@ defineExpose({
         background: @salmon-pink;
         color: white;
         &:hover {
-          background:  @eerie-black;;
+          background: @eerie-black;
         }
       }
     }
@@ -281,13 +292,13 @@ defineExpose({
   font-size: 14px;
 }
 .wrapper .signup-link a {
-  color: #9828d0;
+  color: @salmon-pink;
   text-decoration: none;
 }
 .form .signup-link a:hover {
   text-decoration: underline;
 }
-.tips{
+.tips {
   font-size: 0.5rem;
 }
 </style>
