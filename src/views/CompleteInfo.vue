@@ -192,7 +192,7 @@ const userComplete = () => {
 
 onBeforeMount(() => {});
 onMounted(() => {
-    getData()
+  getData();
 });
 watchEffect(() => {});
 // 使用toRefs解构
@@ -202,6 +202,21 @@ defineExpose({
 });
 </script>
 <style scoped lang="less">
+.login {
+  width: 100vw;
+  height: 100vh;
+  background: #283c86; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .container {
   max-width: 660px;
   padding: 0 20px;
@@ -247,7 +262,7 @@ defineExpose({
   font-size: 14px;
 }
 .wrapper .signup-link a {
-  color: #9828d0;
+  color: @salmon-pink;
   text-decoration: none;
 }
 .form .signup-link a:hover {

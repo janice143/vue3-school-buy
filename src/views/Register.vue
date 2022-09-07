@@ -106,7 +106,7 @@ const route = useRoute();
 const router = useRouter();
 const store = useStore();
 
-const registerForm = ref(null)
+const registerForm = ref(null);
 const validateUsername = (rule, value, callback) => {
   if (!value) {
     return callback(new Error("用户名不能为空"));
@@ -215,18 +215,16 @@ const resetForm = () => {
 const userRegister = () => {
   const { username, phone, studentnumber, place, password, password1 } =
     state.registerForm;
-    return store.dispatch("userRegsiterByInfo", {
-        username,
-        phone,
-        studentnumber,
-        place,
-        password,
-      });
+  return store.dispatch("userRegsiterByInfo", {
+    username,
+    phone,
+    studentnumber,
+    place,
+    password,
+  });
 };
 
-onBeforeMount(() => {
-
-});
+onBeforeMount(() => {});
 onMounted(() => {});
 watchEffect(() => {});
 // 使用toRefs解构
@@ -236,10 +234,26 @@ defineExpose({
 });
 </script>
 <style scoped lang="less">
+.login {
+  width: 100vw;
+  height: 100vh;
+  background: #283c86; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .container {
   max-width: 660px;
   padding: 0 20px;
-  margin: 170px auto;
+  margin: 5% auto;
+
   .wrapper {
     width: 100%;
     background: #fff;
@@ -250,7 +264,7 @@ defineExpose({
         background: @salmon-pink;
         color: white;
         &:hover {
-          background:  @eerie-black;;
+          background: @eerie-black;
         }
       }
     }
@@ -281,13 +295,13 @@ defineExpose({
   font-size: 14px;
 }
 .wrapper .signup-link a {
-  color: #9828d0;
+  color: @salmon-pink;
   text-decoration: none;
 }
 .form .signup-link a:hover {
   text-decoration: underline;
 }
-.tips{
+.tips {
   font-size: 0.5rem;
 }
 </style>
