@@ -57,28 +57,43 @@ html {
     }
   }
 }
+// 修改进度条颜色
+#nprogress .bar {
+  // background: red !important; //自定义颜色
+  background: #283c86 !important; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ) !important; /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #45a247,
+    #283c86
+  ) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 
 /**
- * 自定义滚轮杨思
+ * 自定义滚轮样式
  */
 ::-webkit-scrollbar {
-width: 15px;
-height:10px;
+  width: 15px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-background: @white;
-border-left: 1px solid @cultured;
+  background: @white;
+  border-left: 1px solid @cultured;
 }
 
 ::-webkit-scrollbar-thumb {
-background: hsl(0, 0%, 80%);
-border: 3px solid @white;
--webkit-border-radius: 10px;
-border-radius: 10px;
+  background: hsl(0, 0%, 80%);
+  border: 3px solid @white;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-background: hsl(0, 0%, 70%);
+  background: hsl(0, 0%, 70%);
 }
 
 input[type="button"],
@@ -101,8 +116,8 @@ body {
 button:hover {
   cursor: pointer;
 }
-.iconfont{
-  width:1.2rem;
-  height:1.2rem;
+.iconfont {
+  width: 1.2rem;
+  height: 1.2rem;
   vertical-align: -0.2rem;
 }

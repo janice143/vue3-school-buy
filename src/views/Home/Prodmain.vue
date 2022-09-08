@@ -24,7 +24,7 @@
               </div>
 
               <div @click="state.showSub[index] = !state.showSub[index]">
-               <svg class="add-icon iconfont" aria-hidden="true">
+                <svg class="add-icon iconfont" aria-hidden="true">
                   <use xlink:href="#icon-jiahao"></use>
                 </svg>
                 <svg class="remove-icon iconfont" aria-hidden="true">
@@ -73,7 +73,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[0].slice(0, 5)"
+              v-for="prod in (state.prodmainList[0].slice(0, 5) as Iproductlist[])"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -100,7 +100,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[0].slice(5)"
+              v-for="prod in (state.prodmainList[0].slice(5) as Iproductlist[])"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -132,7 +132,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[1].slice(0, 5)"
+              v-for="prod in (state.prodmainList[1].slice(0, 5) as Iproductlist[])"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -158,7 +158,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[0].slice(5)"
+              v-for="prod in (state.prodmainList[0].slice(5) as Iproductlist[])"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -190,7 +190,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[0].slice(0, 5)"
+              v-for="prod in state.prodmainList[0].slice(0, 5) as Iproductlist[]"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -216,7 +216,7 @@
           <div class="showcase-container">
             <router-link
               class="showcase"
-              v-for="prod in state.prodmainList[0].slice(0, 5)"
+              v-for="prod in state.prodmainList[0].slice(0, 5) as Iproductlist[]"
               :to="`/detail/${prod._id}`"
             >
               <span href="#" class="showcase-img-box">
@@ -244,7 +244,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+  import {Iproductlist} from "types/prodgrid"
 import { reqpostProdmain, reqgetProdleft } from "@/api/index.js";
 import sideNav from "@/assets/list.json";
 import {
@@ -257,10 +258,11 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus } = currentInstance.appContext.config.globalProperties;
+import { useRoute, useRouter, RouteLocationOptions } from "vue-router";
+import { Ilocation } from "types/header";
+import { useEventbus } from "@/hooks/useEventBus";
+const eventbus = useEventbus();
+
 // 路由对象
 const route = useRoute();
 const router = useRouter();
@@ -278,12 +280,16 @@ const state = reactive({
   }),
 });
 
-const goProductList = (type, name) => {
+const goProductList = (type: any, name: string) => {
   // console.log(type,name)
   if (type === "category") {
     // 按照分类名查找
-    let location = { name: "search" };
-    let query = { categoryName: name };
+    let location: Ilocation = {
+      name: "search",
+      params: { keyword: undefined },
+      query: {category1Id: '', categoryName: ''}
+    };
+    let query = { categoryName: name, category1Id: undefined };
     //一定是a标签：一级目录
     query.category1Id = type.category1Id;
 
@@ -293,19 +299,20 @@ const goProductList = (type, name) => {
       //动态给location配置对象添加query属性
       location.query = query;
       //路由跳转
-      router.push(location);
+      router.push(location as RouteLocationOptions);
     }
   } else {
     // 按照关键字查找
-    let location = {
+    let location:Ilocation = {
       name: "search",
       params: { keyword: name },
+      query: {category1Id: '', categoryName: ''}
     };
     location.query = route.query;
-    router.push(location);
+    router.push(location as RouteLocationOptions);
   }
-  $bus.emit("getKeycat");
-  $bus.emit("changeIdx");
+  eventbus.customEmit("getKeycat");
+  eventbus.customEmit("changeIdx");
 };
 
 // order 1表示新品 2表示热门 3表示价格 desc降序  asc 升序
@@ -332,12 +339,7 @@ onMounted(() => {
     })
     .catch((err) => console.log(err));
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-//defineExpose({
-// ...toRefs(state)
-//})
+
 </script>
 <style scoped lang="less">
 .iconfont {
@@ -399,7 +401,6 @@ watchEffect(() => {});
               color: @sonic-silver;
               font-weight: @weight-500;
             }
-            
           }
         }
         .sidebar-submenu-category-list {

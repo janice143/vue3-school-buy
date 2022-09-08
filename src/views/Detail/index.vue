@@ -46,7 +46,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MyEditor from "@/components/Myeditor.vue";
 import ImageList from "./ImageList.vue";
 import Zoom from "./Zoom.vue";
@@ -62,9 +62,10 @@ import {
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import {Iuserlist} from "types/prodgrid"
 
 const currentInstance = getCurrentInstance();
-const { $message } = currentInstance.appContext.config.globalProperties;
+const $message = currentInstance?.appContext.config.globalProperties.$message
 
 // 路由对象
 const route = useRoute();
@@ -95,7 +96,7 @@ const time = computed(() => {
   return Y + M + D + h + m + s;
 });
 
-const place = (username) => {
+const place = (username:string) => {
   // console.log(username)
   // 根据用户名查找place
   // userlist 是要想服务器发请求拿到的，一开始长度可能为空，所以filter之后的结果为空
@@ -103,7 +104,7 @@ const place = (username) => {
     // console.log(this.userlist.filter((user) => user.username === username)[0].place)
     // 过滤操作需要一定时间，没拿到最后数据前没定义，所以要赋空对象
     const user =
-      userlist.value.filter((user) => user.username === username)[0] || {};
+      userlist.value.filter((user:Iuserlist) => user.username === username)[0] || {};
     // console.log(user)
     return user.place;
   }
@@ -126,7 +127,7 @@ const addShopcar = () => {
       //本地存储|会话存储，一般存储的是字符串
 
       $message.show({ text: "成功加入购物车", type: "success" });
-    } catch (error) {
+    } catch (error:any) {
       //失败
       $message.show({ text: error.message, type: "error" });
     }
@@ -144,14 +145,6 @@ onMounted(() => {
   store.dispatch("getProductDetail", route.params.productId);
 });
 
-watchEffect(() => {
-  // console.log(productDetail.description)
-});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-// defineExpose({
-//   productDetail,
-// })
 </script>
 
 <style scoped lang="less">

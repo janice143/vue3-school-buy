@@ -1,182 +1,161 @@
 <template>
-  <div class="home">
-    <!-- 顶部菜单栏 -->
-    <category @getCategoryName="getCategoryName"></category>
-    <section v-if="state.backhome">
-      <Banner></Banner>
-      <Keycat></Keycat>
-      <Prodmain></Prodmain>
+  <div class="category">
+    <div class="category-item-container has-scrollbar">
+      <div
+        class="category-item"
+        v-for="cat in (state.keycatList as IkeycatList[])"
+      >
+        <div class="category-img-box">
+          <svg class="iconfont" aria-hidden="true">
+            <use :xlink:href="`#${cat.icon}`"></use>
+          </svg>
+        </div>
 
-    </section>
+        <div class="category-content-box">
+          <div class="category-content-flex">
+            <h3 class="category-item-title">{{ cat.name }}</h3>
 
-    <Main v-else></Main>
+            <p class="category-item-amount">({{ cat.count }})</p>
+          </div>
+          <div class="category-btn" @click="goProductList(cat.type)">更多</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import category from "./Category.vue";
-import Main from "../Main/Index.vue";
-import Banner from "./Banner.vue";
-import Keycat from "./Keycat.vue";
-import Prodmain from "./Prodmain.vue";
-
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-  getCurrentInstance,
-  onBeforeUnmount,
-  watch,
-} from "vue";
-import { useRoute, useRouter } from "vue-router";
+<script setup lang="ts">
+import { reqgetKeycat } from "@/api/index.js";
+import { reactive, onBeforeMount, onMounted } from "vue";
+import { RouteLocationOptions, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { IkeycatList } from "types/keycat";
+import {  Ilocation } from "types/header";
+import { useEventbus } from "@/hooks/useEventBus";
+const eventbus = useEventbus();
 
+// 路由对象
 const route = useRoute();
 const router = useRouter();
-
-const store = useStore();
-
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus, $message } = currentInstance.appContext.config.globalProperties;
-
-/**
- * 数据部分
- */
+// 数据部分
 const state = reactive({
-  hide: true,
-  // 带给服务器传入的参数
-  conditions: {
-    //产品相应的级次
-    category1Id: "",
-    //产品的名字
-    categoryName: "",
-    //搜索的关键字 keyword
-    keyword: "",
-    //排序:初始状态应该是综合且降序
-    order: "1:desc",
-    //第几页
-    pageNo: 1,
-    //每一页展示条数
-    pageSize: 10,
-  },
-  backhome: true,
-});
-const productlist = computed(() => {
-  return store.state.home.productlist.productlist;
+  keycatList: {},
 });
 
-// const wantId = computed(() => {
-//   return store.state.home.productlist.wantId;
-// });
-// const userlist = computed(() => {
-//   return store.state.home.userlist;
-// });
-// const totalCount = computed(() => {
-//   return store.state.home.productlist.totalCount;
-// });
+const goProductList = (type: any) => {
+  if (type.category) {
+    // 按照分类名查找
+    let location:Ilocation = {
+      name: "search",
+      params: { keyword: '' },
+      query: { category1Id: "", categoryName: "" },
+    };
+    let query = { categoryName: type.category, category1Id: undefined };
+    //一定是a标签：一级目录
+    query.category1Id = type.category1Id;
 
-const showMenu = () => {
-  state.hide = !state.hide;
-  // console.log("点击了");
-};
-const getKeyword = (keyword)=>{
-  // console.log(keyword)
-  state.backhome = false;
-}
-const getKeycat= ()=>{
-  // console.log(keyword)
-  state.backhome = false;
-}
-const changeBHT= ()=>{
-  // console.log(keyword)
-  state.backhome = true;
-  // console.log(state.backhome)
-}
-const getProductList = () => {
-  store.dispatch("getProductList", state.conditions);
-};
-const getUser = ()=> {
-  store.dispatch("getUser").catch(err=>console.log(err.message))
-}
-
-$bus.on("showMenu", showMenu);
-$bus.on("enterKeyword", getKeyword);
-$bus.on("getKeycat", getKeycat);
-$bus.on("changeBHT", changeBHT);
-// 自定义事件
-const getPageNo = (page) => {
-  state.conditions.pageNo = page;
-  // console.log(page)
-  // 向服务器发送请求
-  getProductList();
-};
-
-// 拿到子组件中的分类名字
-const getCategoryName = (categoryName) => {
-  // console.log("拿到子组件数据", categoryName);
-  if (categoryName === "首页") {
-    // 不展示商品，展示首页的内容
-    state.backhome = true;
+    // 由于在搜索框中输入字符搜索时，该参数是在params上，所以要顺带带上params参数
+    if (route.params) {
+      location.params = route.params;
+      //动态给location配置对象添加query属性
+      location.query = query;
+      //路由跳转
+      router.push(location as RouteLocationOptions);
+    }
   } else {
-    state.backhome = false;
+    // 按照关键字查找
+    let location:Ilocation = {
+      name: "search",
+      params: { keyword: type.keyword },
+      query: { category1Id: "", categoryName: "" },
+    };
+    location.query = route.query;
+    router.push(location as RouteLocationOptions);
   }
-  //   将pageNo置为1
-  // state.conditions.pageNo = 1;
-  // state.conditions.categoryName = categoryName;
-  // // // 向服务器发送请求
-  // getProductList();
+  eventbus.customEmit("getKeycat"); // 改变backhome状态
+  eventbus.customEmit("changeIdx"); // 主页跳转，改变Index为1
 };
 
+onBeforeMount(() => {});
 onMounted(() => {
-  // $message.show({text:'111',type:'error'})
-  getProductList();
-  // // 获取商品展示的用户信息
-  // store.dispatch("getUsersdetail");
-    getUser()
+  reqgetKeycat()
+    .then((result) => {
+      // console.log(result)
+      if (result.code === 200) state.keycatList = result.data.keyCount;
+    })
+    .catch((err) => console.log(err));
 });
-onBeforeUnmount(() => {
-  $bus.off("showMenu", showMenu);
-});
-
-// 获取最新的排序方式
-// const getNewOrder = (newOrder) => {
-//   state.conditions.order = newOrder;
-//   // console.log("aaa", newOrder);
-//   // 拿到最新的排序方式后，向服务器发送请求
-//   getProductList();
-// };
-
-watchEffect(() => {});
-watch(route,(pre,old) => {
-  // 输入框等改变路由，监听路由的信息是否发生变化
-
-  state.conditions.categoryName =
-    route.query.categoryName === undefined
-      ? "全部商品"
-      : route.query.categoryName;
-  state.conditions.category1Id =
-    route.query.category1Id === undefined ? 0 : route.query.category1Id;
-  state.conditions.keyword = route.params.keyword;
-
-  // //再次发起ajax请求
-  getProductList();
-  state.conditions.category1Id = undefined;
-  route.params.keyword = undefined
-});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-// defineExpose({
-//   ...toRefs(data),
-// });
 </script>
 <style scoped lang="less">
-.home {
-  padding: 1% 10%;
-  // border: 1px solid red;
+.category {
+  margin-bottom: 30px;
+  margin-top: 30px;
+  .category-item-container {
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    gap: 10px;
+    overflow: auto hidden;
+    scroll-snap-type: inline mandatory;
+    overscroll-behavior-inline: contain;
+    //  border: 1px solid red;
+
+    .category-item {
+      min-width: calc(25% - 40px); // 10px的gap+左右padding 30px
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      border: 1px solid @cultured;
+      border-radius: @border-radius-md;
+      scroll-snap-align: start;
+      .category-img-box {
+        background: @cultured;
+        border: 1px solid hsl(0, 0%, 80%);
+        padding: 10px;
+        border-radius: @border-radius-sm;
+        i {
+          font-size: 1.2rem;
+        }
+      }
+
+      .category-content-box {
+        width: 100%;
+
+        .category-content-flex {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          .category-item-title {
+            color: @eerie-black;
+            font-size: @fs-9;
+            font-weight: @weight-600;
+            text-transform: uppercase;
+          }
+
+          .category-item-amount {
+            color: @sonic-silver;
+            font-size: @fs-11;
+          }
+        }
+
+        .category-btn {
+          color: @salmon-pink;
+          font-size: @fs-9;
+          font-weight: @weight-500;
+          text-transform: capitalize;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    @media screen and (max-width: 900px) {
+      .category-item {
+        min-width: calc(100% - 32px); // 左右padding30px+左右border2px
+      }
+    }
+  }
 }
 </style>

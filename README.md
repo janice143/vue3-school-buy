@@ -40,6 +40,19 @@ https://stackoverflow.com/questions/57086672/element-implicitly-has-an-any-type-
 改：:style="state.style[props.type as keyof Istyle]"
 
 
+Here are two other solutions
+
+When a module is not yours - try to install types from @types:
+
+npm install -D @types/module-name
+If the above install errors - try changing import statements to require:
+
+// import * as yourModuleName from 'module-name';
+const yourModuleName = require('module-name');
+
+报Property 'content' does not exist on type 'AxiosResponse<any>'
+https://github.com/axios/axios/issues/1510
+
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 

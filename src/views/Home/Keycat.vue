@@ -1,9 +1,12 @@
 <template>
   <div class="category">
     <div class="category-item-container has-scrollbar">
-      <div class="category-item" v-for="cat in state.keycatList">
+      <div
+        class="category-item"
+        v-for="cat in (state.keycatList as IkeycatList[])"
+      >
         <div class="category-img-box">
-          <svg class="iconfont" aria-hidden="true" >
+          <svg class="iconfont" aria-hidden="true">
             <use :xlink:href="`#${cat.icon}`"></use>
           </svg>
         </div>
@@ -23,24 +26,14 @@
 
 <script setup lang="ts">
 import { reqgetKeycat } from "@/api/index.js";
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-  getCurrentInstance,
-} from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { reactive, onBeforeMount, onMounted } from "vue";
+import { RouteLocationOptions, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import {IkeycatList} from 'types/keycat.ts'
+import { IkeycatList } from "types/keycat";
+import {  Ilocation } from "types/header";
 import { useEventbus } from "@/hooks/useEventBus";
 const eventbus = useEventbus();
 
-
-const store = useStore();
 // 路由对象
 const route = useRoute();
 const router = useRouter();
@@ -49,11 +42,15 @@ const state = reactive({
   keycatList: {},
 });
 
-const goProductList = (type) => {
+const goProductList = (type: any) => {
   if (type.category) {
     // 按照分类名查找
-    let location = { name: "search" };
-    let query = { categoryName: type.category };
+    let location:Ilocation = {
+      name: "search",
+      params: { keyword: '' },
+      query: { category1Id: "", categoryName: "" },
+    };
+    let query = { categoryName: type.category, category1Id: undefined };
     //一定是a标签：一级目录
     query.category1Id = type.category1Id;
 
@@ -63,16 +60,17 @@ const goProductList = (type) => {
       //动态给location配置对象添加query属性
       location.query = query;
       //路由跳转
-      router.push(location);
+      router.push(location as RouteLocationOptions);
     }
   } else {
     // 按照关键字查找
-    let location = {
+    let location:Ilocation = {
       name: "search",
       params: { keyword: type.keyword },
+      query: { category1Id: "", categoryName: "" },
     };
     location.query = route.query;
-    router.push(location);
+    router.push(location as RouteLocationOptions);
   }
   eventbus.customEmit("getKeycat"); // 改变backhome状态
   eventbus.customEmit("changeIdx"); // 主页跳转，改变Index为1
@@ -87,7 +85,6 @@ onMounted(() => {
     })
     .catch((err) => console.log(err));
 });
-
 </script>
 <style scoped lang="less">
 .category {

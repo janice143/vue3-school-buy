@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -20,15 +20,10 @@ import {
   onMounted,
   watchEffect,
   computed,
-  getCurrentInstance,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 路由对象
-const route = useRoute();
-const router = useRouter();
-// 引入 全局bus
-const currentInstance = getCurrentInstance();
-const { $bus } = currentInstance.appContext.config.globalProperties;
+
+import { useEventbus } from "@/hooks/useEventBus";
+const eventBus = useEventbus();
 
 // 数据部分
 const state = reactive({
@@ -38,11 +33,12 @@ const props = defineProps({
   productImg: Array,
 });
 const gallery = computed(() => {
-  return props.productImg !== undefined ? props.productImg[state.curIndex] : "";
+  // console.log(props.productImg,state.curIndex)
+  return props.productImg !== undefined ? props.productImg[state.curIndex] as string : "";
 });
-const mask = ref(null);
-const big = ref(null);
-const handler = (e) => {
+const mask:any = ref(null);
+const big:any = ref(null);
+const handler = (e:MouseEvent) => {
   // console.log(mask.value)
   const maskNode = mask.value;
   const bigNode = big.value;
@@ -68,13 +64,10 @@ const handler = (e) => {
 onBeforeMount(() => {});
 onMounted(() => {
   // 全局事件总线，获取兄弟组件传过来的getIndex
-  $bus.on("getIndex", (index) => {
+  eventBus.getIndex("getIndex", (index) => {
     state.curIndex = index;
   });
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
 defineExpose({
   mask,
   big,

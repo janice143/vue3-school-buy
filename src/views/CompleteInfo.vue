@@ -78,9 +78,7 @@
 import {
   ref,
   reactive,
-  onBeforeMount,
   onMounted,
-  watchEffect,
   getCurrentInstance,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -193,11 +191,9 @@ const userComplete = () => {
   });
 };
 
-onBeforeMount(() => {});
 onMounted(() => {
   getData();
 });
-watchEffect(() => {});
 defineExpose({
   registerForm,
 });

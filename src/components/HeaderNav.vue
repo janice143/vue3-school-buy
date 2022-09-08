@@ -10,7 +10,7 @@
     </li>
   </ul>
   <!-- 已经登录 -->
-  <ul v-else :class="`type-${props.type}`">
+  <ul v-else>
     <li>
       <div class="base_link" @click="state.isOpenCart = !state.isOpenCart">
         <svg class="iconfont" aria-hidden="true">
@@ -39,12 +39,10 @@
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Cart from "@/views/Cart.vue";
 import {
-  ref,
   reactive,
-  toRefs,
   onBeforeMount,
   onMounted,
   watchEffect,
@@ -57,10 +55,8 @@ const route = useRoute();
 const router = useRouter();
 const store = useStore();
 const currentInstance = getCurrentInstance();
-const { $message } = currentInstance.appContext.config.globalProperties;
+const  $message = currentInstance?.appContext.config.globalProperties.$message
 
-// 获取父组件的值
-const props = defineProps({});
 const state = reactive({
   isOpenCart: false,
   // 未登录
@@ -82,7 +78,7 @@ const username = computed(() => {
 });
 
 // 退出登录：通知服务器清除一些数据，比如token。
-const logout = (e) => {
+const logout = (e:MouseEvent) => {
   // console.log('exit')
   e.preventDefault();
   store
@@ -90,8 +86,8 @@ const logout = (e) => {
     .then(() => router.push("/home"))
     .catch((err) => console.log(err));
 };
-const goCMS = (e) => {
-  const cmsURL = "http://101.34.27.188:9528/login";
+const goCMS = (e:MouseEvent) => {
+  const cmsURL = "http://43.143.81.10:9528/login";
   // 判断用户信息是否填完整
   // 获取用户信息
   let userinfo = store.state.user.userInfo;
@@ -103,7 +99,7 @@ const goCMS = (e) => {
       userinfo.phone.length > 0 &&
       userinfo.studentnumber.length > 0
     ) {
-      window.location = cmsURL;
+      window.location = cmsURL as Location | (string & Location);
     } else {
       router.push("/completeinfo");
     }
@@ -112,15 +108,6 @@ const goCMS = (e) => {
   }
 };
 
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
-onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
 </script>
 <style scoped lang="less">
 .base_link:hover {

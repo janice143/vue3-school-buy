@@ -8,29 +8,20 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 
 import { Editor } from "@wangeditor/editor-for-vue";
+import { IDomEditor} from '@wangeditor/editor'
+
 import {
-  ref,
   reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-  watch,
   shallowRef,
   onBeforeUnmount,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-// 路由对象
-const route = useRoute();
-const router = useRouter();
+
 // 数据部分
 const state = reactive({
-
   editorConfig: {
     readOnly: true, // 设置只读属性
   },
@@ -48,7 +39,7 @@ onBeforeUnmount(() => {
   editor.destroy();
 });
 
-const handleCreated = (editor) => {
+const handleCreated = (editor:IDomEditor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
 

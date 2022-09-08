@@ -82,8 +82,9 @@ import {
 } from "vue";
 import { useRoute, useRouter, RouteLocationOptions } from "vue-router";
 import { useStore } from "vuex";
+import { Iresult } from "types/keycat";
 const currentInstance = getCurrentInstance();
-const $message  = currentInstance?.appContext.config.globalProperties.$message
+const $message = currentInstance?.appContext.config.globalProperties.$message;
 
 // 路由对象
 const route = useRoute();
@@ -131,7 +132,7 @@ const userLogin = () => {
 
 //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
 const getCaptchaCode = () => {
-  reqpostCaptchas().then((res) => {
+  reqpostCaptchas().then((res: Iresult) => {
     // console.log(res)
     state.captchaCodeImg = res.data.code;
   });
@@ -141,7 +142,6 @@ onBeforeMount(() => {});
 onMounted(() => {
   getCaptchaCode();
 });
-
 </script>
 <style scoped lang="less">
 * {

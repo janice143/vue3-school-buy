@@ -24,10 +24,7 @@
 import sideNav from "@/assets/list.json";
 import {
   reactive,
-  onMounted,
   watchEffect,
-  defineProps,
-  getCurrentInstance,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 

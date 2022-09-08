@@ -101,10 +101,6 @@ const goHome = () => {
   eventbus.customEmit("changeIdx0");
   router.push("/home");
 };
-const showCompoMenu = () => {
-  eventbus.customEmit("showMenu");
-};
-
 const goSearch = () => {
   state.showForm = false;
   if (route.query) {
